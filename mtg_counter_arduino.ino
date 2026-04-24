@@ -265,7 +265,8 @@ void setup() {
   tft.setRotation(0);
   ts.setRotation(0);
   tft.setSwapBytes(true);
-  resetAll();
+  for (int i = 0; i < NUM_COUNTERS; i++) *counters[i].value = counters[i].resetValue;
+  drawUI();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
