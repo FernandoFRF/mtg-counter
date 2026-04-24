@@ -107,7 +107,7 @@ TouchRegion regions[] = {
   {  120,   0,                        180,            89,                 1,   -1,    0,                   0,          nullptr   },  // vOpponent −1
   {  181,   0,                        239,            89,                 1,   +1,    0,                   0,          nullptr   },  // vOpponent +1
   // ── Zona 2: Swamp +10 — long press, 1/3 superior ─────────────────────────────────────────────────────────────
-  {    0,   Z2_Y,                     119,  Z2_Y+(Z3_Y-Z2_Y)/3-1,        2,  +10,  SWAMP_LONG_PRESS_MS,  Z2_Y+1,    nullptr   },  // swamp +10
+  {    0,   Z2_Y,                     119,  Z2_Y+(Z3_Y-Z2_Y)/3-1,        2,  +10,  SWAMP_LONG_PRESS_MS,  Z2_Y-1,    nullptr   },  // swamp +10
   // ── Zona 2: Swamp ±1 — 2/3 inferiores ────────────────────────────────────────────────────────────────────────
   {    0,   Z2_Y+(Z3_Y-Z2_Y)/3,       60,  Z3_Y-1,                       2,   -1,    0,                   0,          nullptr   },  // swamp −1
   {   61,   Z2_Y+(Z3_Y-Z2_Y)/3,      119,  Z3_Y-1,                       2,   +1,    0,                   0,          nullptr   },  // swamp +1
