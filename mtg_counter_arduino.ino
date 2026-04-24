@@ -318,5 +318,5 @@ void loop() {
   }
 
   touching = nowTouching;
-  delay(75);
+  delay(10);
 }
