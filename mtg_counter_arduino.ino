@@ -43,6 +43,7 @@ TFT_eSPI tft = TFT_eSPI();
 #define LONG_PRESS_MS       1000
 #define SWAMP_LONG_PRESS_MS  300
 #define TAP_MAX_MS           600
+#define TAP_DEBOUNCE_MS       70
 #define NO_MIN             -9999  // sentinela: sem limite inferior
 
 // ─── CORES ───────────────────────────────────────────────────────────────────
@@ -132,6 +133,7 @@ const int NUM_REGIONS = sizeof(regions) / sizeof(regions[0]);
 // ─── ESTADO DO TOQUE ─────────────────────────────────────────────────────────
 bool          touching         = false;
 unsigned long touchStartTime   = 0;
+unsigned long lastTapTime      = 0;
 int           touchX = 0, touchY = 0;
 bool          longPressHandled = false;
 
@@ -304,8 +306,11 @@ void loop() {
     if (touching && !longPressHandled) {
       const TouchRegion* r = findRegion(touchX, touchY);
       if (r) {
-        if (r->holdMs == 0 && (millis() - touchStartTime) < TAP_MAX_MS)
+        if (r->holdMs == 0 && (millis() - touchStartTime) < TAP_MAX_MS
+            && (millis() - lastTapTime) >= TAP_DEBOUNCE_MS) {
           fireAction(*r);
+          lastTapTime = millis();
+        }
         else if (r->holdMs > 0)
           clearProgress(*r);
       }
