@@ -210,19 +210,11 @@ void updateButtons() {
 }
 
 // Barra de progresso do long press (aparece embaixo do texto do botão)
-void drawProgress(int btnCX, unsigned long elapsed, unsigned long maxMs) {
+void drawProgress(int btnCX, int barY, unsigned long elapsed, unsigned long maxMs) {
   int totalW = 80;
   int barW   = map(constrain(elapsed, 0, maxMs), 0, maxMs, 0, totalW);
   int barX   = btnCX - totalW / 2;
-  
-  // Ajuste dinâmico: desenha a barra 5 pixels acima do final da tela
-  // ou 2 pixels abaixo do limite do botão (Z4_Y)
-  int barY   = SCR_H - 5; 
-
-  // Desenha um fundo sutil para a barra (opcional, ajuda a ver o progresso)
-  tft.fillRect(barX, barY, totalW, 3, 0x2104); // Cinza bem escuro
-  
-  // Desenha o progresso em si
+  tft.fillRect(barX, barY, totalW, 3, 0x2104); // fundo cinza escuro
   tft.fillRect(barX, barY, barW, 3, COL_PROGRESS);
 }
 
@@ -353,16 +345,16 @@ void loop() {
           else                resetAll();
           longPressHandled = true;
         } else {
-          drawProgress(btnCX, elapsed, LONG_PRESS_MS);
+          drawProgress(btnCX, SCR_H - 5, elapsed, LONG_PRESS_MS);
         }
       } else if (isSwampPlus10) {
         if (elapsed >= SWAMP_LONG_PRESS_MS) {
-          patchBackground(0, SCR_H - 8, SCR_W, 8);
+          patchBackground(SWAMP_X - 40, Z2_Y, 80, 5);
           cSwamp += 10;
           updateCounter(true);
           longPressHandled = true;
         } else {
-          drawProgress(SWAMP_X, elapsed, SWAMP_LONG_PRESS_MS);
+          drawProgress(SWAMP_X, Z2_Y + 1, elapsed, SWAMP_LONG_PRESS_MS);
         }
       }
     }
@@ -377,8 +369,10 @@ void loop() {
         
         // Limpa a barra se o usuário soltar antes de completar o tempo
         bool isSwampPlus10 = (touchX < MID_X) && (touchY >= Z2_Y) && (touchY < Z2_Y + 35);
-        if (touchY >= Z4_Y || isSwampPlus10) {
+        if (touchY >= Z4_Y) {
           patchBackground(0, SCR_H - 8, SCR_W, 8);
+        } else if (isSwampPlus10) {
+          patchBackground(SWAMP_X - 40, Z2_Y, 80, 5);
         }
       }
       // O Reset do longPressHandled acontece naturalmente na próxima vez que tocar
