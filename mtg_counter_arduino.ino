@@ -82,7 +82,8 @@ int           touchX = 0, touchY = 0;
 bool          longPressHandled = false;
 bool          progressDrawn    = false;
 
-#define LONG_PRESS_MS 1000
+#define LONG_PRESS_MS       1000
+#define SWAMP_LONG_PRESS_MS  300
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
@@ -209,9 +210,9 @@ void updateButtons() {
 }
 
 // Barra de progresso do long press (aparece embaixo do texto do botão)
-void drawProgress(int btnCX, unsigned long elapsed) {
-  int totalW = 80; // Reduzi um pouco para garantir que não bata nas bordas
-  int barW   = map(constrain(elapsed, 0, LONG_PRESS_MS), 0, LONG_PRESS_MS, 0, totalW);
+void drawProgress(int btnCX, unsigned long elapsed, unsigned long maxMs) {
+  int totalW = 80;
+  int barW   = map(constrain(elapsed, 0, maxMs), 0, maxMs, 0, totalW);
   int barX   = btnCX - totalW / 2;
   
   // Ajuste dinâmico: desenha a barra 5 pixels acima do final da tela
@@ -278,9 +279,11 @@ void handleTap(int x, int y) {
   // ZONA 2: CONTADORES
   else if (y < Z3_Y) {
     if (x < MID_X) {
-      if (y < Z2_Y + 35) cSwamp += 10;
-      else               cSwamp = max(0, cSwamp + ((x > 60) ? 1 : -1));
-      updateCounter(true);
+      // +10 swamp agora é long press — tap curto não faz nada na metade superior
+      if (y >= Z2_Y + 35) {
+        cSwamp = max(0, cSwamp + ((x > 60) ? 1 : -1));
+        updateCounter(true);
+      }
     } else {
       cStorm = max(0, cStorm + ((x > 180) ? 1 : -1));
       updateCounter(false);
@@ -340,24 +343,26 @@ void loop() {
       // --- Toque em andamento (Hold) ---
       unsigned long elapsed = millis() - touchStartTime;
 
+      bool isSwampPlus10 = (touchX < MID_X) && (touchY >= Z2_Y) && (touchY < Z2_Y + 35);
+
       if (touchY >= Z4_Y) {
         int btnCX = (touchX < MID_X) ? 60 : 180;
-        
-        // Verifica se o tempo de Long Press foi atingido
         if (elapsed >= LONG_PRESS_MS) {
-          // 1. Apaga a barra IMEDIATAMENTE
-          patchBackground(0, SCR_H - 8, SCR_W, 8); 
-          
-          // 2. Executa a ação
+          patchBackground(0, SCR_H - 8, SCR_W, 8);
           if (touchX < MID_X) endOfTurn();
           else                resetAll();
-          
-          // 3. Marca como resolvido para não repetir e não entrar no handleTap
-          longPressHandled = true; 
-        } 
-        else {
-          // Enquanto não atinge o tempo, desenha o progresso
-          drawProgress(btnCX, elapsed);
+          longPressHandled = true;
+        } else {
+          drawProgress(btnCX, elapsed, LONG_PRESS_MS);
+        }
+      } else if (isSwampPlus10) {
+        if (elapsed >= SWAMP_LONG_PRESS_MS) {
+          patchBackground(0, SCR_H - 8, SCR_W, 8);
+          cSwamp += 10;
+          updateCounter(true);
+          longPressHandled = true;
+        } else {
+          drawProgress(SWAMP_X, elapsed, SWAMP_LONG_PRESS_MS);
         }
       }
     }
@@ -371,8 +376,9 @@ void loop() {
         }
         
         // Limpa a barra se o usuário soltar antes de completar o tempo
-        if (touchY >= Z4_Y) {
-          patchBackground(0, SCR_H - 8, SCR_W, 8); 
+        bool isSwampPlus10 = (touchX < MID_X) && (touchY >= Z2_Y) && (touchY < Z2_Y + 35);
+        if (touchY >= Z4_Y || isSwampPlus10) {
+          patchBackground(0, SCR_H - 8, SCR_W, 8);
         }
       }
       // O Reset do longPressHandled acontece naturalmente na próxima vez que tocar
