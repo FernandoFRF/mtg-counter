@@ -91,7 +91,7 @@ struct TouchRegion {
   int           counterIdx;      // índice em counters[], -1 = ação global
   int           delta;
   unsigned long holdMs;          // 0 = tap; >0 = long press
-  int           progressCX, progressY;
+  int           progressY;
   void          (*globalAction)();
 };
 
@@ -100,32 +100,32 @@ void endOfTurn();
 void resetAll();
 
 TouchRegion regions[] = {
-//   x1    y1                         x2             y2                 cIdx  delta  holdMs              pCX  pY          action
-  // ── Zona 1: Vida ──────────────────────────────────────────────────────────────────────────────────────────────────────────
-  {    0,   0,                         60,            89,                 0,   -1,    0,                   0,   0,          nullptr   },  // vCycler  −1
-  {   61,   0,                        119,            89,                 0,   +1,    0,                   0,   0,          nullptr   },  // vCycler  +1
-  {  120,   0,                        180,            89,                 1,   -1,    0,                   0,   0,          nullptr   },  // vOpponent −1
-  {  181,   0,                        239,            89,                 1,   +1,    0,                   0,   0,          nullptr   },  // vOpponent +1
-  // ── Zona 2: Swamp +10 — long press, 1/3 superior ─────────────────────────────────────────────────────────────────────────
-  {    0,   Z2_Y,                     119,  Z2_Y+(Z3_Y-Z2_Y)/3-1,        2,  +10,  SWAMP_LONG_PRESS_MS,  65,  Z2_Y+1,    nullptr   },  // swamp +10
-  // ── Zona 2: Swamp ±1 — 2/3 inferiores ────────────────────────────────────────────────────────────────────────────────────
-  {    0,   Z2_Y+(Z3_Y-Z2_Y)/3,       60,  Z3_Y-1,                       2,   -1,    0,                   0,   0,          nullptr   },  // swamp −1
-  {   61,   Z2_Y+(Z3_Y-Z2_Y)/3,      119,  Z3_Y-1,                       2,   +1,    0,                   0,   0,          nullptr   },  // swamp +1
-  // ── Zona 2: Storm ±1 ──────────────────────────────────────────────────────────────────────────────────────────────────────
-  {  120,   Z2_Y,                     180,  Z3_Y-1,                       3,   -1,    0,                   0,   0,          nullptr   },  // storm −1
-  {  181,   Z2_Y,                     239,  Z3_Y-1,                       3,   +1,    0,                   0,   0,          nullptr   },  // storm +1
-  // ── Zona 3: Manas — linha superior +1, inferior −1 ───────────────────────────────────────────────────────────────────────
-  {    0,   Z3_Y,                      59,  Z3_Y+24,                      4,   +1,    0,                   0,   0,          nullptr   },  // mW +1
-  {    0,   Z3_Y+25,                   59,  Z4_Y-1,                       4,   -1,    0,                   0,   0,          nullptr   },  // mW −1
-  {   60,   Z3_Y,                     119,  Z3_Y+24,                      5,   +1,    0,                   0,   0,          nullptr   },  // mU +1
-  {   60,   Z3_Y+25,                  119,  Z4_Y-1,                       5,   -1,    0,                   0,   0,          nullptr   },  // mU −1
-  {  120,   Z3_Y,                     179,  Z3_Y+24,                      6,   +1,    0,                   0,   0,          nullptr   },  // mR +1
-  {  120,   Z3_Y+25,                  179,  Z4_Y-1,                       6,   -1,    0,                   0,   0,          nullptr   },  // mR −1
-  {  180,   Z3_Y,                     239,  Z3_Y+24,                      7,   +1,    0,                   0,   0,          nullptr   },  // mG +1
-  {  180,   Z3_Y+25,                  239,  Z4_Y-1,                       7,   -1,    0,                   0,   0,          nullptr   },  // mG −1
-  // ── Zona 4: Botões — long press ───────────────────────────────────────────────────────────────────────────────────────────
-  {    0,   Z4_Y,                     119,  SCR_H-1,                     -1,    0,  LONG_PRESS_MS,         60,  SCR_H-5,   endOfTurn },  // end of turn
-  {  120,   Z4_Y,                     239,  SCR_H-1,                     -1,    0,  LONG_PRESS_MS,        180,  SCR_H-5,   resetAll  },  // reset all
+//   x1    y1                         x2             y2                 cIdx  delta  holdMs              pY          action
+  // ── Zona 1: Vida ──────────────────────────────────────────────────────────────────────────────────────────────
+  {    0,   0,                         60,            89,                 0,   -1,    0,                   0,          nullptr   },  // vCycler  −1
+  {   61,   0,                        119,            89,                 0,   +1,    0,                   0,          nullptr   },  // vCycler  +1
+  {  120,   0,                        180,            89,                 1,   -1,    0,                   0,          nullptr   },  // vOpponent −1
+  {  181,   0,                        239,            89,                 1,   +1,    0,                   0,          nullptr   },  // vOpponent +1
+  // ── Zona 2: Swamp +10 — long press, 1/3 superior ─────────────────────────────────────────────────────────────
+  {    0,   Z2_Y,                     119,  Z2_Y+(Z3_Y-Z2_Y)/3-1,        2,  +10,  SWAMP_LONG_PRESS_MS,  Z2_Y+1,    nullptr   },  // swamp +10
+  // ── Zona 2: Swamp ±1 — 2/3 inferiores ────────────────────────────────────────────────────────────────────────
+  {    0,   Z2_Y+(Z3_Y-Z2_Y)/3,       60,  Z3_Y-1,                       2,   -1,    0,                   0,          nullptr   },  // swamp −1
+  {   61,   Z2_Y+(Z3_Y-Z2_Y)/3,      119,  Z3_Y-1,                       2,   +1,    0,                   0,          nullptr   },  // swamp +1
+  // ── Zona 2: Storm ±1 ──────────────────────────────────────────────────────────────────────────────────────────
+  {  120,   Z2_Y,                     180,  Z3_Y-1,                       3,   -1,    0,                   0,          nullptr   },  // storm −1
+  {  181,   Z2_Y,                     239,  Z3_Y-1,                       3,   +1,    0,                   0,          nullptr   },  // storm +1
+  // ── Zona 3: Manas — linha superior +1, inferior −1 ───────────────────────────────────────────────────────────
+  {    0,   Z3_Y,                      59,  Z3_Y+24,                      4,   +1,    0,                   0,          nullptr   },  // mW +1
+  {    0,   Z3_Y+25,                   59,  Z4_Y-1,                       4,   -1,    0,                   0,          nullptr   },  // mW −1
+  {   60,   Z3_Y,                     119,  Z3_Y+24,                      5,   +1,    0,                   0,          nullptr   },  // mU +1
+  {   60,   Z3_Y+25,                  119,  Z4_Y-1,                       5,   -1,    0,                   0,          nullptr   },  // mU −1
+  {  120,   Z3_Y,                     179,  Z3_Y+24,                      6,   +1,    0,                   0,          nullptr   },  // mR +1
+  {  120,   Z3_Y+25,                  179,  Z4_Y-1,                       6,   -1,    0,                   0,          nullptr   },  // mR −1
+  {  180,   Z3_Y,                     239,  Z3_Y+24,                      7,   +1,    0,                   0,          nullptr   },  // mG +1
+  {  180,   Z3_Y+25,                  239,  Z4_Y-1,                       7,   -1,    0,                   0,          nullptr   },  // mG −1
+  // ── Zona 4: Botões — long press ───────────────────────────────────────────────────────────────────────────────
+  {    0,   Z4_Y,                     119,  SCR_H-1,                     -1,    0,  LONG_PRESS_MS,         SCR_H-5,   endOfTurn },  // end of turn
+  {  120,   Z4_Y,                     239,  SCR_H-1,                     -1,    0,  LONG_PRESS_MS,         SCR_H-5,   resetAll  },  // reset all
 };
 const int NUM_REGIONS = sizeof(regions) / sizeof(regions[0]);
 
@@ -217,15 +217,14 @@ void fireAction(const TouchRegion& r) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 void drawProgress(const TouchRegion& r, unsigned long elapsed) {
-  int totalW = 80;
+  int totalW = r.x2 - r.x1 + 1;
   int barW   = map(constrain(elapsed, 0, r.holdMs), 0, r.holdMs, 0, totalW);
-  int barX   = r.progressCX - totalW / 2;
-  tft.fillRect(barX, r.progressY, totalW, 3, 0x2104);
-  tft.fillRect(barX, r.progressY, barW,   3, COL_PROGRESS);
+  tft.fillRect(r.x1, r.progressY, totalW, 3, 0x2104);
+  tft.fillRect(r.x1, r.progressY, barW,   3, COL_PROGRESS);
 }
 
 void clearProgress(const TouchRegion& r) {
-  patchBackground(r.progressCX - 40, r.progressY - 1, 80, 5);
+  patchBackground(r.x1, r.progressY - 1, r.x2 - r.x1 + 1, 5);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
