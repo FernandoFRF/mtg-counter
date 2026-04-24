@@ -241,8 +241,10 @@ void endOfTurn() {
 }
 
 void resetAll() {
-  for (int i = 0; i < NUM_COUNTERS; i++) *counters[i].value = counters[i].resetValue;
-  drawUI();
+  for (int i = 0; i < NUM_COUNTERS; i++) {
+    *counters[i].value = counters[i].resetValue;
+    updateCounterDisplay(i);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
