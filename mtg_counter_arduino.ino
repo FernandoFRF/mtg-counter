@@ -65,9 +65,9 @@ struct Counter {
   int            textYOffset;      // deslocamento vertical do drawString
 };
 
-int vCycler = 20, vOpponent = 20;
-int cSwamp  = 0,  cStorm    = 0;
-int mW = 0, mU = 0, mR = 0, mG = 0;
+int vCycler, vOpponent;
+int cSwamp, cStorm;
+int mW, mU, mR, mG;
 
 Counter counters[] = {
 //  value         min    reset   eot    cx    cy   pW   pH    color       font                  yOff
@@ -264,7 +264,7 @@ void setup() {
   tft.setRotation(0);
   ts.setRotation(0);
   tft.setSwapBytes(true);
-  drawUI();
+  resetAll();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
