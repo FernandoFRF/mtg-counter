@@ -272,7 +272,7 @@ void handleTap(int x, int y) {
   else if (y < Z3_Y) {
     if (x < MID_X) {
       // +10 swamp agora é long press — tap curto não faz nada na metade superior
-      if (y >= Z2_Y + 45) {
+      if (y >= Z2_Y + (Z3_Y - Z2_Y) / 3) {
         cSwamp = max(0, cSwamp + ((x > 60) ? 1 : -1));
         updateCounter(true);
       }
@@ -335,7 +335,7 @@ void loop() {
       // --- Toque em andamento (Hold) ---
       unsigned long elapsed = millis() - touchStartTime;
 
-      bool isSwampPlus10 = (touchX < MID_X) && (touchY >= Z2_Y) && (touchY < Z2_Y + 45);
+      bool isSwampPlus10 = (touchX < MID_X) && (touchY >= Z2_Y) && (touchY < Z2_Y + (Z3_Y - Z2_Y) / 3);
 
       if (touchY >= Z4_Y) {
         int btnCX = (touchX < MID_X) ? 60 : 180;
@@ -368,7 +368,7 @@ void loop() {
         }
         
         // Limpa a barra se o usuário soltar antes de completar o tempo
-        bool isSwampPlus10 = (touchX < MID_X) && (touchY >= Z2_Y) && (touchY < Z2_Y + 45);
+        bool isSwampPlus10 = (touchX < MID_X) && (touchY >= Z2_Y) && (touchY < Z2_Y + (Z3_Y - Z2_Y) / 3);
         if (touchY >= Z4_Y) {
           patchBackground(0, SCR_H - 8, SCR_W, 8);
         } else if (isSwampPlus10) {
