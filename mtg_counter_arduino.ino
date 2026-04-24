@@ -43,7 +43,7 @@ TFT_eSPI tft = TFT_eSPI();
 #define LONG_PRESS_MS       1000
 #define SWAMP_LONG_PRESS_MS  300
 #define TAP_MAX_MS           600
-#define TAP_DEBOUNCE_MS       70
+#define TAP_DEBOUNCE_MS      100
 #define NO_MIN             -9999  // sentinela: sem limite inferior
 
 // ─── CORES ───────────────────────────────────────────────────────────────────
