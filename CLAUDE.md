@@ -158,6 +158,8 @@ mtg-counter/
 
 ---
 
-## Roadmap futuro (não implementar agora)
+## Roadmap futuro
 
-<!-- Preencher conforme surgirem ideias — ex: mod de bateria recarregável (TP4056 + LiPo + chave liga/desliga), calibração de touch dedicada, novo tema de bg.bin, etc. -->
+Ideias e mods ainda não implementados (OTA, mod de bateria, calibração de
+touch, etc.) estão em [`docs/ROADMAP.md`](docs/ROADMAP.md), pra não
+inchar este arquivo com conteúdo que muda com frequência.

@@ -23,6 +23,7 @@ src/mtg-counter.ino   firmware
 data/bg.bin           imagem de fundo (RGB565 cru, 240x320) — gravada via LittleFS
 bg1.png, bg.psd       arte-fonte da imagem de fundo (ver "Trocar a imagem de fundo")
 docs/GUIA_TECNICO.md  detalhes de hardware, pegadinhas e como debugar
+docs/ROADMAP.md       ideias e mods futuros (nada agendado, só backlog)
 ```
 
 ## Requisitos
