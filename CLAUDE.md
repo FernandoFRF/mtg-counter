@@ -39,6 +39,12 @@ fix: correct touch coordinate mapping after calibration
 chore: add platformio.ini and migrate from Arduino IDE
 ```
 
+### Branches
+
+* Trabalho novo (feature, fix, experimento) sempre em branch separada, nunca direto na `main`
+* Nomenclatura: `feat/nome-da-coisa`, `fix/nome-do-bug` (ex: `feat/battery-mod`, `fix/touch-calibration`)
+* Merge para `main` só quando estiver testado na placa física
+
 ---
 
 ## O que é o MTG Counter
