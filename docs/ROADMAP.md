@@ -11,35 +11,56 @@ pré-requisito prático do item 5 (case 3D depende de saber o que precisa
 caber fisicamente), por isso ficam antes na lista. A lista de compras de
 cada mod fica junto do próprio mod, não separada no fim.
 
-### 1. Mod de bateria (TP4056 + LiPo + chave liga/desliga)
+### 1. Mod de bateria (módulo carrega+boost + LiPo + chave liga/desliga)
 
-**O quê:** carregador TP4056 + bateria LiPo + chave liga/desliga física,
+**O quê:** módulo de bateria + bateria LiPo + chave liga/desliga física,
 pra usar o contador sem depender de cabo USB na mesa.
 
-**Considerações técnicas:**
-- Preferir módulo TP4056 **com proteção** (versão com DW01+FS8205,
-  costuma ser vendida como "TP4056 with protection") — evita sobrecarga e
-  descarga profunda da LiPo.
+**Considerações técnicas (pesquisado em 2026-08-02):**
+- Confirmado em duas fontes técnicas independentes: a CYD **não tem
+  conector nem circuito de bateria de fábrica** — alimentação é só via
+  micro-USB 5V, com dois reguladores AMS1117@3.3V internos. Ou seja, um
+  TP4056 puro **não é suficiente sozinho**: ele carrega a bateria mas só
+  entrega 3.7–4.2V, e a placa precisa de 5V — falta um conversor step-up
+  no meio.
+- Consumo medido pela comunidade: **~115mA com o backlight no brilho
+  máximo** (cai ~40% escurecendo via PWM no pino do backlight).
+- Decisão tomada: usar um módulo **tudo-em-um** (carrega + boost 5V, tipo
+  "UPS" com power-path de verdade) em vez de TP4056 + step-up separados —
+  menos fiação e mais seguro pra um primeiro mod. A alternativa com
+  módulos separados (TP4056 + MT3608) é mais barata mas exige cuidado na
+  fiação porque um TP4056 puro não faz power-path (carregar e usar ao
+  mesmo tempo com segurança).
+- A maioria dos módulos desse tipo é vendida pra bateria **18650**
+  (cilíndrica, com suporte metálico), mas o circuito interno é o mesmo de
+  uma LiPo de bolso — quase todos trazem também um pad JST-PH pra soldar
+  a bateria direto, sem usar o suporte cilíndrico. **Conferir isso na
+  descrição do produto antes de comprar**, já que o suporte cilíndrico não
+  cabe bem num case fino.
+- A chave liga/desliga deve ficar na **saída de 5V** do módulo (entre o
+  módulo e a CYD), não na linha da bateria — assim o carregamento
+  continua funcionando com o aparelho desligado (comportamento de UPS de
+  verdade: pluga o USB, carrega, independente da chave).
 - A carcaça original da CYD não tem espaço interno pra bateria — esse mod
-  provavelmente exige um case customizado (ver item 5) ou uma solução
-  provisória com a bateria montada externamente.
-- Checar como a CYD é alimentada (regulador interno, tensão esperada na
-  entrada) antes de decidir se a saída do TP4056 pode alimentar a placa
-  direto ou se precisa de um conversor step-up.
-- A chave liga/desliga deve cortar o circuito fisicamente (não é um
-  "sleep" por software) — normalmente fica em série entre a bateria e a
-  entrada de alimentação da placa.
+  depende do case customizado do item 5.
 
-**Em aberto:** capacidade da bateria (mAh) — depende de quanto tempo de
-uso por partida/torneio se quer e do consumo real do conjunto
-display+ESP32 (o backlight do TFT costuma ser o maior consumidor).
+**Em aberto:** capacidade final da bateria — estimativa grosseira de
+1500–2000mAh dá ~6–9h de uso contínuo (considerando perda do boost), mas
+relatos da comunidade com setups parecidos variam bastante (1h30 a 5h) —
+vale medir na prática depois de montado.
 
-**Lista de compras (rascunho, específicações finais em aberto):**
-- Módulo TP4056 com proteção (DW01+FS8205)
-- Bateria LiPo — capacidade a definir
-- Chave liga/desliga (slide switch, em série no circuito de alimentação)
-- Conferir compatibilidade de tensão/conector antes de comprar (ver
-  "Em aberto" acima)
+**Pra revisar na próxima sessão:** thread com discussão específica sobre
+alimentar a CYD por bateria —
+[issue #47](https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display/issues/47),
+em especial [este comentário](https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display/issues/47#issuecomment-2311551210)
+(ainda não lido/avaliado).
+
+**Lista de compras:**
+- Módulo carregador + boost 5V (tudo-em-um): [DD05CVSA — Usinainfo](https://www.usinainfo.com.br/carregador-de-bateria/modulo-carregador-e-boost-para-bateria-litio-18650-com-saida-5v-12a-dd05cvsa-9137.html)
+  ou alternativa no Mercado Livre: [Módulo Step Up UPS Carregador, entra 5V sai 5V](https://www.mercadolivre.com.br/modulo-step-up-ups-carregador-1s-18650-entra-5v-e-sai-5v-nfe/up/MLBU603703887)
+- Bateria LiPo, conector JST-PH 2.0mm 2 pinos, 1500–2000mAh: [listagem no Mercado Livre](https://lista.mercadolivre.com.br/bateria-3.7v-conector-jst)
+- Chave liga/desliga (slide switch): [pack de 5un, 0.3A/50V DC — Mercado Livre](https://produto.mercadolivre.com.br/MLB-3170465443-mini-chave-liga-desliga-pacote-com-5-unidades-_JM)
+  (bem acima do consumo da placa, ~115–180mA)
 
 ### 2. Múltiplos layouts de tela
 
@@ -109,6 +130,12 @@ hardware (bateria + botões) estar fechado:
   físicos.
 - Seção de hardware completa no README (ou um `docs/HARDWARE.md`
   dedicado), pra quem quiser replicar o projeto do zero.
+
+**Referências:**
+- [ESP32 Cheap Yellow Display — USB-C version enclosure (Printables)](https://www.printables.com/model/744864-esp32-cheap-yellow-display-usb-c-version-enclosure)
+  — ponto de partida pra avaliar depois; conferir se é compatível com a
+  revisão da placa usada aqui (o link é da variante USB-C, nossa placa é
+  micro-USB) antes de adotar como base.
 
 **Dependência:** faz mais sentido detalhar esse item **depois** dos itens
 1 e 3, já que o design do case e a documentação final dependem de saber
